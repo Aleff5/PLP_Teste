@@ -12,7 +12,7 @@ import (
 
 // Função para conectar ao banco de dados
 func ConectaDB() *sql.DB {
-	conexao := "user=postgres dbname=TheBoys password=davi252310 host=localhost sslmode=disable"
+	conexao := "user=postgres dbname=TheBoyzz password=admin host=localhost sslmode=disable"
 	db, err := sql.Open("postgres", conexao)
 	if err != nil {
 		log.Fatal(err)
@@ -41,6 +41,7 @@ type Herois struct {
 }
 
 type Poder struct {
+	Id_poder  int    `json:"id_poder`
 	Poder     string `json:"poder"`
 	Descricao string `json:"descricao"`
 }
@@ -442,7 +443,7 @@ func ExibeTodosOsPoderes() []Poder {
 	db := ConectaDB()
 	defer db.Close()
 
-	query := `SELECT * FROM Poderes ORDER BY poder ASC`
+	query := `SELECT * FROM Poderes ORDER BY id_poder ASC`
 	TodosPoderes, err := db.Query(query)
 	if err != nil {
 		log.Fatalf("Erro ao executar a consulta: %v", err)
@@ -454,6 +455,7 @@ func ExibeTodosOsPoderes() []Poder {
 	for TodosPoderes.Next() {
 		var poder Poder
 		err := TodosPoderes.Scan(
+			&poder.Id_poder,
 			&poder.Poder,
 			&poder.Descricao,
 		)

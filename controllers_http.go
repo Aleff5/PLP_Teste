@@ -213,3 +213,10 @@ func ConsultaCrimesHeroi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func MostraTodosPoderes(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	allPoderes := ExibeTodosOsPoderes()
+	json.NewEncoder(w).Encode(allPoderes)
+}

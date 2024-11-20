@@ -18,5 +18,6 @@ func Loading() {
 	r.HandleFunc("/heroistatus", MostraPorStatus)
 	r.HandleFunc("/heroieseveridadecrime", ConsultaCrimesHS)
 	r.HandleFunc("/heroicrime", ConsultaCrimesHeroi)
+	r.HandleFunc("/poderes", MostraTodosPoderes)
 	log.Fatal(http.ListenAndServe(":8080", (r)))
 }
