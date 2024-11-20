@@ -18,18 +18,18 @@ VALUES
 
 INSERT INTO Poderes (id_heroi, poder, descricao)
 VALUES
-(2, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
+(1, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
+(1, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
+(1, 'Visão laser', 'Capacidade de emitir feixes de laser pelos olhos com grande precisão e poder de destruição.'),
 (2, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(2, 'Visão laser', 'Capacidade de emitir feixes de laser pelos olhos com grande precisão e poder de destruição.'),
+(2, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
 (3, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(3, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
-(4, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(5, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
+(4, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
+(5, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
 (6, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
 (7, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
 (8, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(9, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(10, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.');
+(9, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.');
 
 -- Inserir CRIMES no banco de dados
 
