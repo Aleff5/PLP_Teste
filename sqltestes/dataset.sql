@@ -60,7 +60,7 @@ INSERT INTO herois_poderes (id_heroi, id_poder) VALUES
 (3, 14), -- Queen Maeve - Invulnerabilidade
 (3, 20), -- Queen Maeve - Resistência extrema
 (4, 17), -- A-Train - Velocidade sobre-humana
-(4, 6),  -- A-Train - Agilidade aprimorada
+(4, 17), -- A-Train - Agilidade aprimorada
 (5, 27), -- The Deep - Controle de animais
 (5, 11), -- The Deep - Manipulação de água
 (6, 14), -- Black Noir - Invulnerabilidade
@@ -70,10 +70,10 @@ INSERT INTO herois_poderes (id_heroi, id_poder) VALUES
 (7, 41), -- Soldier Boy - Absorção de energia
 (8, 7),  -- Kimiko - Regeneração
 (8, 13), -- Kimiko - Super força
-(8, 6),  -- Kimiko - Agilidade aprimorada
+(8, 17), -- Kimiko - Agilidade aprimorada
 (9, 13), -- Mothers Milk - Super força
 (9, 20), -- Mothers Milk - Resistência extrema
-(10, 6), -- Frenchie - Agilidade aprimorada
+(10, 17), -- Frenchie - Agilidade aprimorada
 (10, 26); -- Frenchie - Sentidos ampliados
 
 
