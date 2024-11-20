@@ -190,33 +190,47 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 }
 
 // Função para Modificar Informações do Herói
-func ModificacaoHeroi(NomeHeroi string, NovoNomeHeroi string, NomeReal string, Sexo string, Altura float64, Local_nascimento string, Data_nascimento float64, Peso float64, Popularidade int, Forca int, Status string) error {
+func EditarHeroiPorNome(nomeHeroi string, heroiAtualizado Herois) error {
 	db := ConectaDB()
-	defer db.Close() // Garantir que o banco de dados seja fechado após o uso
-	// Query que atualiza o herói com "NomeHeroi"
+	defer db.Close()
+
+	// Consulta para atualizar os dados do herói com base no nome
 	query := `
-		UPDATE
-			herois
-		SET
-			nome_heroi = $2,
-			nome = $3,
-			sexo = $4,
-			altura = $5,
-			local_nasc = $6,
-			data_nasc = $7,
-			peso = $8,
-			popularidade = $9,
-			forca = $10,
-			status = $11;
-		WHERE
-			nome_heroi = $1
+        UPDATE Herois
+        SET 
+            nome_heroi = $1,
+            nome_real = $2,
+            sexo = $3,
+            altura = $4,
+            peso = $5,
+            data_nascimento = $6,
+            local_nascimento = $7,
+            popularidade = $8,
+            forca = $9,
+            status_atividade = $10
+        WHERE nome_heroi = $11;
 			`
-	rows, err := db.Query(query, NomeHeroi, NovoNomeHeroi, NomeReal, Sexo, Altura, Local_nascimento, Data_nascimento, Peso, Popularidade, Forca, Status)
+
+	// Executa a consulta com os valores atualizados
+	_, err := db.Exec(query,
+		heroiAtualizado.NomeHeroi,
+		heroiAtualizado.Nome, // Nome real
+		heroiAtualizado.Sexo,
+		heroiAtualizado.Altura,
+		heroiAtualizado.Peso,
+		heroiAtualizado.DataNasc,
+		heroiAtualizado.LocalNasc,
+		heroiAtualizado.Popularidade,
+		heroiAtualizado.Forca,
+		heroiAtualizado.Status,
+		nomeHeroi, // Condição para identificar o herói correto
+	)
+
 	if err != nil {
-		log.Fatal(err)
-		return err
+		return fmt.Errorf("erro ao editar herói com nome '%s': %w", nomeHeroi, err)
 	}
-	defer rows.Close() // Garantir que o resultado seja fechado após o uso
+
+	fmt.Printf("Herói com nome '%s' atualizado com sucesso!\n", nomeHeroi)
 	return nil
 }
 

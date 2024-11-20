@@ -220,3 +220,71 @@ func MostraTodosPoderes(w http.ResponseWriter, r *http.Request) {
 	allPoderes := ExibeTodosOsPoderes()
 	json.NewEncoder(w).Encode(allPoderes)
 }
+
+func ConsultaCrimesSeveridade(w http.ResponseWriter, r *http.Request) {
+	var requestData struct {
+		SeveridadeMinima int `json:"severidade_minima"`
+		SeveridadeMaxima int `json:"severidade_maxima"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+		http.Error(w, "Invalid Request Payload", http.StatusBadRequest)
+		return
+	}
+
+	severidadeMinima := requestData.SeveridadeMinima
+	severidadeMaxima := requestData.SeveridadeMaxima
+
+	// Configura o cabeçalho de resposta
+	w.Header().Set("Content-Type", "application/json")
+
+	crimes, err := ConsultaCrimesPorSeveridade(severidadeMinima, severidadeMaxima)
+	if err != nil {
+		http.Error(w, "Crimes não encontrado ou erro no servidor", http.StatusNotFound)
+		return
+	}
+	err = json.NewEncoder(w).Encode(crimes)
+	if err != nil {
+		http.Error(w, "Erro ao codificar resposta JSON", http.StatusInternalServerError)
+		return
+	}
+}
+
+func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
+	// Verifica se o método da requisição é PUT
+	if r.Method != http.MethodPut {
+		http.Error(w, "Método não permitido. Use PUT.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Estrutura para decodificar o payload da requisição
+	var requestPayload struct {
+		NomeHeroi       string `json:"nome_heroi"`       // Nome do herói a ser editado
+		HeroiAtualizado Herois `json:"heroi_atualizado"` // Dados atualizados do herói
+	}
+
+	// Decodifica o JSON do corpo da requisição
+	err := json.NewDecoder(r.Body).Decode(&requestPayload)
+	if err != nil {
+		http.Error(w, "Payload da requisição inválido", http.StatusBadRequest)
+		return
+	}
+
+	// Verifica se o nome do herói foi fornecido
+	if requestPayload.NomeHeroi == "" {
+		http.Error(w, "O nome do herói deve ser fornecido", http.StatusBadRequest)
+		return
+	}
+
+	// Chama a função para editar os dados do herói
+	err = EditarHeroiPorNome(requestPayload.NomeHeroi, requestPayload.HeroiAtualizado)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Erro ao editar herói: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Retorna uma resposta de sucesso
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Herói atualizado com sucesso!"))
+}

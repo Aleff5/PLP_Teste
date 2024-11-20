@@ -19,5 +19,7 @@ func Loading() {
 	r.HandleFunc("/heroieseveridadecrime", ConsultaCrimesHS)
 	r.HandleFunc("/heroicrime", ConsultaCrimesHeroi)
 	r.HandleFunc("/poderes", MostraTodosPoderes)
+	r.HandleFunc("/severidadecrime", ConsultaCrimesSeveridade)
+	r.HandleFunc("/editar", EditarHeroiHandler)
 	log.Fatal(http.ListenAndServe(":8080", (r)))
 }
