@@ -16,20 +16,67 @@ VALUES
 
 -- Inserir PODERES no banco de dados
 
-INSERT INTO Poderes (id_heroi, poder, descricao)
-VALUES
-(1, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
-(1, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(1, 'Visão laser', 'Capacidade de emitir feixes de laser pelos olhos com grande precisão e poder de destruição.'),
-(2, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(2, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
-(3, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(4, 'Voo', 'Capacidade de voar em alta velocidade e grandes distâncias.'),
-(5, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(6, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(7, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(8, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.'),
-(9, 'Superforça', 'Habilidade de exercer força física extraordinária, levantando grandes pesos e causando danos imensos.');
+INSERT INTO Poderes (poder, descricao) VALUES
+    ('Super força', 'Força física sobre-humana, capaz de levantar objetos extremamente pesados.'),
+    ('Invulnerabilidade', 'Resistência a danos físicos, incluindo balas, explosões e impactos.'),
+    ('Visão de calor', 'Emissão de feixes de calor concentrado pelos olhos.'),
+    ('Voo', 'Capacidade de voar e se mover pelo ar em alta velocidade.'),
+    ('Velocidade sobre-humana', 'Habilidade de se mover a velocidades incríveis, muito acima da média humana.'),
+    ('Agilidade aprimorada', 'Reflexos e movimentos rápidos e precisos, superiores a qualquer atleta.'),
+    ('Regeneração', 'Capacidade de curar feridas e regenerar partes do corpo rapidamente.'),
+    ('Controle mental', 'Habilidade de manipular os pensamentos e ações de outras pessoas.'),
+    ('Controle de eletricidade', 'Capacidade de gerar, manipular e lançar descargas elétricas.'),
+    ('Transparência', 'Capacidade de ficar invisível, tornando-se indetectável a olho nu.'),
+    ('Manipulação de água', 'Habilidade de controlar e moldar a água para criar formas ou ataques.'),
+    ('Transformação corporal', 'Capacidade de mudar a forma física ou aparência do corpo.'),
+    ('Audição ampliada', 'Capacidade de ouvir sons a grandes distâncias e frequências imperceptíveis aos humanos.'),
+    ('Controle de animais', 'Habilidade de se comunicar e controlar animais.'),
+    ('Visão de raio-X', 'Capacidade de enxergar através de objetos sólidos.'),
+    ('Criação de explosões', 'Habilidade de gerar explosões de energia com as mãos ou corpo.'),
+    ('Controle de fogo', 'Habilidade de criar e manipular chamas.'),
+    ('Teletransporte', 'Capacidade de se mover instantaneamente de um lugar para outro.'),
+    ('Manipulação de energia', 'Habilidade de controlar e redirecionar energia em diferentes formas.'),
+    ('Resistência extrema', 'Capacidade de suportar longos períodos de atividade física sem se cansar.'),
+    ('Controle de gravidade', 'Habilidade de alterar a gravidade em uma área específica.'),
+    ('Telecinese', 'Capacidade de mover objetos com a mente.'),
+    ('Criocinese', 'Habilidade de gerar e manipular gelo ou temperaturas extremamente frias.'),
+    ('Manipulação de plantas', 'Habilidade de controlar e fazer plantas crescerem rapidamente.'),
+    ('Camuflagem', 'Capacidade de se misturar com o ambiente, tornando-se quase invisível.'),
+    ('Sentidos ampliados', 'Audição, visão, olfato e tato extremamente aguçados.'),
+    ('Paralisia', 'Capacidade de paralisar inimigos com um toque ou olhar.'),
+    ('Habilidade de cura', 'Capacidade de curar outras pessoas ao tocá-las.'),
+    ('Absorção de energia', 'Habilidade de absorver energia de ataques ou fontes externas para ficar mais forte.');
+
+
+INSERT INTO herois_poderes (id_heroi, id_poder) VALUES
+(1, 13), -- Homelander - Super força
+(1, 14), -- Homelander - Invulnerabilidade
+(1, 15), -- Homelander - Visão de calor
+(1, 16), -- Homelander - Voo
+(2, 14), -- Starlight - Invulnerabilidade
+(2, 26), -- Starlight - Controle de eletricidade
+(2, 20), -- Starlight - Resistência extrema
+(3, 13), -- Queen Maeve - Super força
+(3, 14), -- Queen Maeve - Invulnerabilidade
+(3, 20), -- Queen Maeve - Resistência extrema
+(4, 17), -- A-Train - Velocidade sobre-humana
+(4, 6),  -- A-Train - Agilidade aprimorada
+(5, 27), -- The Deep - Controle de animais
+(5, 11), -- The Deep - Manipulação de água
+(6, 14), -- Black Noir - Invulnerabilidade
+(6, 10), -- Black Noir - Transparência
+(7, 13), -- Soldier Boy - Super força
+(7, 20), -- Soldier Boy - Resistência extrema
+(7, 41), -- Soldier Boy - Absorção de energia
+(8, 7),  -- Kimiko - Regeneração
+(8, 13), -- Kimiko - Super força
+(8, 6),  -- Kimiko - Agilidade aprimorada
+(9, 13), -- Mothers Milk - Super força
+(9, 20), -- Mothers Milk - Resistência extrema
+(10, 6), -- Frenchie - Agilidade aprimorada
+(10, 26); -- Frenchie - Sentidos ampliados
+
+
 
 -- Inserir CRIMES no banco de dados
 
