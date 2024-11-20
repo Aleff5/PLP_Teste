@@ -132,7 +132,7 @@ VALUES
 ('Alerta Comunitário', 'Informar moradores sobre a presença de um super perigoso', 1),
 ('Teste de Equipamento', 'Avaliar novos dispositivos contra supers', 3);
 
-/*
+
 INSERT INTO Heroi_Crime (id_heroi, id_crime, data_crime, descricao_evento, esconder)
 VALUES
 -- Homelander
@@ -179,4 +179,4 @@ VALUES
 -- Frenchie
 (10, 9, '2022-12-12', 'Produção e uso de drogas ilegais', TRUE),
 (10, 6, '2021-05-05', 'Sequestro de criminoso para obter informações', FALSE);
-*/
+
