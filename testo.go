@@ -133,8 +133,8 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 	// Consulta para buscar um herói específico pelo nome do herói
 	query := `
 		SELECT 
-			h.nome, h.sexo, h.peso, h.altura, h.data_nasc, h.local_nasc, 
-			h.nome_heroi, h.popularidade, h.status, h.forca, 
+			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
 			STRING_AGG(p.poder, ', ') AS poderes
 		FROM 
 			Herois h
@@ -143,19 +143,21 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 		WHERE 
 			h.nome_heroi = $1
 		GROUP BY 
-			h.id_heroi, h.nome, h.sexo, h.peso, h.altura, h.data_nasc, h.local_nasc, 
-			h.nome_heroi, h.popularidade, h.status, h.forca;
+			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
 	`
 
 	// Executa a consulta
 	var heroi Herois
-	var poderes string
+	var poderes *string     // Poderes como string, pode ser NULL
+	var dataNasc *time.Time // Data de nascimento, pode ser NULL
+
 	err := db.QueryRow(query, nomeHeroi).Scan(
 		&heroi.Nome,
 		&heroi.Sexo,
 		&heroi.Peso,
 		&heroi.Altura,
-		&heroi.DataNasc,
+		&dataNasc,
 		&heroi.LocalNasc,
 		&heroi.NomeHeroi,
 		&heroi.Popularidade,
@@ -163,6 +165,7 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 		&heroi.Forca,
 		&poderes,
 	)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("herói com nome %s não encontrado", nomeHeroi)
@@ -170,8 +173,19 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 		return nil, err
 	}
 
-	// Divide a string de poderes em uma slice
-	heroi.Poderes = splitPoderes(poderes)
+	// Converte a data de nascimento, se não for NULL
+	if dataNasc != nil {
+		heroi.DataNasc = *dataNasc
+	} else {
+		heroi.DataNasc = time.Time{} // Define como valor zero
+	}
+
+	// Converte os poderes em uma slice, se não for NULL
+	if poderes != nil {
+		heroi.Poderes = splitPoderes(*poderes)
+	} else {
+		heroi.Poderes = []string{} // Nenhum poder registrado
+	}
 
 	return &heroi, nil
 }
@@ -181,8 +195,8 @@ func BuscaHeroisPorPopularidade(minPopularidade, maxPopularidade int) ([]Herois,
 	defer db.Close()
 
 	query := `
-		SELECT nome, sexo, peso, altura, data_nasc, local_nasc, 
-		       nome_heroi, popularidade, status, forca
+		SELECT nome_real, sexo, peso, altura, data_nascimento, local_nascimento, 
+		       nome_heroi, popularidade, status_atividade, forca
 		FROM Herois
 		WHERE popularidade BETWEEN $1 AND $2
 		ORDER BY popularidade DESC;
@@ -224,7 +238,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 
 	// Consulta SQL para buscar heróis pelo status
 	query := `
-		SELECT nome, sexo, peso, altura, data_nasc, local_nasc, 
+		SELECT nome_real, sexo, peso, altura, data_nascimento, local_nascimento, 
 		       nome_heroi, popularidade, status_atividade, forca
 		FROM Herois
 		WHERE status_atividade = $1;
@@ -276,7 +290,7 @@ func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []struct {
 	// Consulta para inserir o herói
 	queryHeroi := `
 		INSERT INTO Herois (
-			nome_heroi, nome_real, sexo, altura, peso, data_nasc, local_nasc, 
+			nome_heroi, nome_real, sexo, altura, peso, data_nascimento, local_nascimento, 
 			popularidade, forca, status_atividade
 		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 		RETURNING id_heroi;

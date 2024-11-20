@@ -96,7 +96,7 @@ func ConsultaCrimesPorHeroi(nomeHeroi string) ([]Crimes, error) {
 		JOIN 
 			Herois h ON hc.id_heroi = h.id_heroi
 		WHERE 
-			h.nome_heroi = $1
+			h.nome_heroi ILIKE $1
 		AND 
 			hc.esconder = false;
 	`

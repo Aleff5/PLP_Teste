@@ -10,6 +10,7 @@ import (
 func Loading() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", Home)
+	r.HandleFunc("/", MostraTudo)
+	r.HandleFunc("/heroi", MostraPorNome)
 	log.Fatal(http.ListenAndServe(":8080", (r)))
 }
