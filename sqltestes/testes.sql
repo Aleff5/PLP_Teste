@@ -178,3 +178,10 @@ EXECUTE FUNCTION ajustar_atributos_missao_func();
 
 
 
+CREATE TABLE Herois_Poderes(
+    id_heroi INT NOT NULL,
+    id_poder INT NOT NULL,
+    CONSTRAINT pk_heroi_poder PRIMARY KEY (id_heroi, id_poder),
+    CONSTRAINT fk_heroi_poder FOREIGN KEY (id_heroi) REFERENCES Herois(id_heroi),
+    CONSTRAINT fk_poder_heroi FOREIGN KEY (id_poder) REFERENCES Poder(id_poder)
+)
