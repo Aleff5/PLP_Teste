@@ -190,7 +190,7 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 	return &heroi, nil
 }
 
-func BuscaHeroisPorPopularidade(minPopularidade, maxPopularidade int) ([]Herois, error) {
+func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	db := ConectaDB()
 	defer db.Close()
 
@@ -198,11 +198,11 @@ func BuscaHeroisPorPopularidade(minPopularidade, maxPopularidade int) ([]Herois,
 		SELECT nome_real, sexo, peso, altura, data_nascimento, local_nascimento, 
 		       nome_heroi, popularidade, status_atividade, forca
 		FROM Herois
-		WHERE popularidade BETWEEN $1 AND $2
+		WHERE popularidade <= $1
 		ORDER BY popularidade DESC;
 	`
 
-	rows, err := db.Query(query, minPopularidade)
+	rows, err := db.Query(query, popularidade)
 	if err != nil {
 		return nil, err
 	}
@@ -211,21 +211,38 @@ func BuscaHeroisPorPopularidade(minPopularidade, maxPopularidade int) ([]Herois,
 	var herois []Herois
 	for rows.Next() {
 		var heroi Herois
+		// var poderes *string // Poderes como string, pode ser NULL
+		var dataNasc *time.Time
 		err := rows.Scan(
 			&heroi.Nome,
 			&heroi.Sexo,
 			&heroi.Peso,
 			&heroi.Altura,
-			&heroi.DataNasc,
+			&dataNasc,
 			&heroi.LocalNasc,
 			&heroi.NomeHeroi,
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
+			// &poderes,
 		)
 		if err != nil {
 			return nil, err
 		}
+		// Converte a data de nascimento, se não for NULL
+		if dataNasc != nil {
+			heroi.DataNasc = *dataNasc
+		} else {
+			heroi.DataNasc = time.Time{} // Define como valor zero
+		}
+
+		// // Converte os poderes em uma slice, se não for NULL
+		// if poderes != nil {
+		// 	heroi.Poderes = splitPoderes(*poderes)
+		// } else {
+		// 	heroi.Poderes = []string{} // Nenhum poder registrado
+		// }
+
 		herois = append(herois, heroi)
 	}
 
@@ -252,22 +269,38 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 
 	var herois []Herois
 	for rows.Next() {
+		var dataNasc *time.Time
+		// var poderes *string
 		var heroi Herois
 		err := rows.Scan(
 			&heroi.Nome,
 			&heroi.Sexo,
 			&heroi.Peso,
 			&heroi.Altura,
-			&heroi.DataNasc,
+			&dataNasc,
 			&heroi.LocalNasc,
 			&heroi.NomeHeroi,
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
+			// &poderes,
 		)
 		if err != nil {
 			return nil, err
 		}
+		// Converte a data de nascimento, se não for NULL
+		if dataNasc != nil {
+			heroi.DataNasc = *dataNasc
+		} else {
+			heroi.DataNasc = time.Time{} // Define como valor zero
+		}
+
+		// Converte os poderes em uma slice, se não for NULL
+		// if poderes != nil {
+		// 	heroi.Poderes = splitPoderes(*poderes)
+		// } else {
+		// 	heroi.Poderes = []string{} // Nenhum poder registrado
+		// }
 		herois = append(herois, heroi)
 	}
 
