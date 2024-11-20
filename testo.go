@@ -204,11 +204,21 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	defer db.Close()
 
 	query := `
-		SELECT nome_real, sexo, peso, altura, data_nascimento, local_nascimento, 
-		       nome_heroi, popularidade, status_atividade, forca
-		FROM Herois
-		WHERE popularidade <= $1
-		ORDER BY popularidade DESC;
+		SELECT 
+			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
+			STRING_AGG(p.poder, ', ') AS poderes
+		FROM 
+			Herois h
+		LEFT JOIN 
+			Herois_Poderes hp ON h.id_heroi = hp.id_heroi
+		LEFT JOIN
+			Poderes p ON p.id_poder = hp.id_poder
+		WHERE 
+			h.popularidade <= $1
+		GROUP BY 
+			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
 	`
 
 	rows, err := db.Query(query, popularidade)
@@ -220,7 +230,7 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	var herois []Herois
 	for rows.Next() {
 		var heroi Herois
-		// var poderes *string // Poderes como string, pode ser NULL
+		var poderes *string // Poderes como string, pode ser NULL
 		var dataNasc *time.Time
 		err := rows.Scan(
 			&heroi.Nome,
@@ -233,7 +243,7 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
-			// &poderes,
+			&poderes,
 		)
 		if err != nil {
 			return nil, err
@@ -245,12 +255,12 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 			heroi.DataNasc = time.Time{} // Define como valor zero
 		}
 
-		// // Converte os poderes em uma slice, se não for NULL
-		// if poderes != nil {
-		// 	heroi.Poderes = splitPoderes(*poderes)
-		// } else {
-		// 	heroi.Poderes = []string{} // Nenhum poder registrado
-		// }
+		// Converte os poderes em uma slice, se não for NULL
+		if poderes != nil {
+			heroi.Poderes = splitPoderes(*poderes)
+		} else {
+			heroi.Poderes = []string{} // Nenhum poder registrado
+		}
 
 		herois = append(herois, heroi)
 	}
@@ -264,10 +274,21 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 
 	// Consulta SQL para buscar heróis pelo status
 	query := `
-		SELECT nome_real, sexo, peso, altura, data_nascimento, local_nascimento, 
-		       nome_heroi, popularidade, status_atividade, forca
-		FROM Herois
-		WHERE status_atividade = $1;
+		SELECT 
+			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
+			STRING_AGG(p.poder, ', ') AS poderes
+		FROM 
+			Herois h
+		LEFT JOIN 
+			Herois_Poderes hp ON h.id_heroi = hp.id_heroi
+		LEFT JOIN
+			Poderes p ON p.id_poder = hp.id_poder
+		WHERE 
+			h.status_atividade = $1
+		GROUP BY 
+			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
 	`
 
 	rows, err := db.Query(query, status)
@@ -279,7 +300,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	var herois []Herois
 	for rows.Next() {
 		var dataNasc *time.Time
-		// var poderes *string
+		var poderes *string
 		var heroi Herois
 		err := rows.Scan(
 			&heroi.Nome,
@@ -292,7 +313,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
-			// &poderes,
+			&poderes,
 		)
 		if err != nil {
 			return nil, err
@@ -304,12 +325,12 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 			heroi.DataNasc = time.Time{} // Define como valor zero
 		}
 
-		// Converte os poderes em uma slice, se não for NULL
-		// if poderes != nil {
-		// 	heroi.Poderes = splitPoderes(*poderes)
-		// } else {
-		// 	heroi.Poderes = []string{} // Nenhum poder registrado
-		// }
+		//Converte os poderes em uma slice, se não for NULL
+		if poderes != nil {
+			heroi.Poderes = splitPoderes(*poderes)
+		} else {
+			heroi.Poderes = []string{} // Nenhum poder registrado
+		}
 		herois = append(herois, heroi)
 	}
 
