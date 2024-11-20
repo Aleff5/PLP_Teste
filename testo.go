@@ -12,7 +12,7 @@ import (
 
 // Função para conectar ao banco de dados
 func ConectaDB() *sql.DB {
-	conexao := "user=postgres dbname=TheBoys password=davi252310 host=localhost sslmode=disable"
+	conexao := "user=postgres dbname=TheBoyzz password=admin host=localhost sslmode=disable"
 	db, err := sql.Open("postgres", conexao)
 	if err != nil {
 		log.Fatal(err)
@@ -143,8 +143,10 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 			STRING_AGG(p.poder, ', ') AS poderes
 		FROM 
 			Herois h
-		LEFT JOIN 
-			Poderes p ON h.id_heroi = p.id_heroi
+		JOIN 
+			Herois_Poderes hp ON h.id_heroi = hp.id_heroi
+		JOIN
+			Poderes p ON p.id_poder = hp.id_poder
 		WHERE 
 			h.nome_heroi = $1
 		GROUP BY 

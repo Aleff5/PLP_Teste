@@ -14,13 +14,12 @@ CREATE TABLE Herois (
 
 
 CREATE TABLE Poderes (
-    id_poder SERIAL NOT NULL,
-    id_heroi INT NOT NULL,
+    id_poder SERIAL NOT NULL PRIMARY KEY,
     poder VARCHAR(50),
-    descricao VARCHAR(255),
-    CONSTRAINT pk_poder_heroi PRIMARY KEY (id_poder, id_heroi),
-    CONSTRAINT fk_heroi FOREIGN KEY (id_heroi) REFERENCES Herois(id_heroi)
+    descricao VARCHAR(255)
 );
+
+
 
 CREATE TABLE Batalhas (
     id_batalha SERIAL PRIMARY KEY,
