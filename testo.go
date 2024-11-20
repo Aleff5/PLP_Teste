@@ -337,7 +337,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	return herois, nil
 }
 
-func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []Poder) error {
+func CadastrarHeroiComPoderesNormalizados(heroi Herois, idsPoderes []int) error {
 	db := ConectaDB()
 	defer db.Close()
 
@@ -376,19 +376,19 @@ func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []Poder) error {
 		return fmt.Errorf("erro ao cadastrar o herói: %w", err)
 	}
 
-	// Consulta para inserir os poderes
-	queryPoder := `
-		INSERT INTO Poderes (
-			id_heroi, poder, descricao
-		) VALUES ($1, $2, $3);
+	// Consulta para inserir na tabela herois_poderes
+	queryHeroiPoder := `
+		INSERT INTO herois_poderes (
+			id_heroi, id_poder
+		) VALUES ($1, $2);
 	`
 
-	// Itera sobre os poderes e os insere na tabela
-	for _, poder := range poderes {
-		_, err := tx.Exec(queryPoder, idHeroi, poder.Poder, poder.Descricao)
+	// Itera sobre os IDs dos poderes e realiza as inserções na tabela herois_poderes
+	for _, idPoder := range idsPoderes {
+		_, err = tx.Exec(queryHeroiPoder, idHeroi, idPoder)
 		if err != nil {
 			tx.Rollback() // Reverte a transação em caso de erro
-			return fmt.Errorf("erro ao cadastrar poder '%s': %w", poder.Poder, err)
+			return fmt.Errorf("erro ao associar herói e poder (id_heroi: %d, id_poder: %d): %w", idHeroi, idPoder, err)
 		}
 	}
 
@@ -398,7 +398,7 @@ func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []Poder) error {
 		return fmt.Errorf("erro ao confirmar transação: %w", err)
 	}
 
-	fmt.Println("Herói e poderes cadastrados com sucesso!")
+	fmt.Println("Herói e associações com poderes cadastrados com sucesso!")
 	return nil
 }
 
@@ -436,4 +436,35 @@ func Remove(id int) error {
 
 	log.Printf("Herói com ID: %d removido com sucesso. Linhas afetadas: %d", id, rowsAffected)
 	return nil
+}
+
+func ExibeTodosOsPoderes() []Poder {
+	db := ConectaDB()
+	defer db.Close()
+
+	query := `SELECT * FROM Poderes ORDER BY poder ASC`
+	TodosPoderes, err := db.Query(query)
+	if err != nil {
+		log.Fatalf("Erro ao executar a consulta: %v", err)
+	}
+	defer TodosPoderes.Close()
+
+	var informacoes []Poder
+
+	for TodosPoderes.Next() {
+		var poder Poder
+		err := TodosPoderes.Scan(
+			&poder.Poder,
+			&poder.Descricao,
+		)
+		if err != nil {
+			log.Fatalf("Erro ao fazer o scan dos resultados: %v", err)
+		}
+		informacoes = append(informacoes, poder)
+	}
+	// Verifica se ocorreu algum erro durante a iteração
+	if err = TodosPoderes.Err(); err != nil {
+		log.Fatalf("Erro durante a iteração dos resultados: %v", err)
+	}
+	return informacoes
 }

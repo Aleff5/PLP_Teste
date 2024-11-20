@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	//"fmt"
 	"net/http"
 )
@@ -105,19 +106,19 @@ func MostraPorStatus(w http.ResponseWriter, r *http.Request) {
 func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
 	// Estrutura para decodificar o payload
 	var requestPayload struct {
-		Heroi   Herois  `json:"heroi"`
-		Poderes []Poder `json:"poderes"`
+		Heroi      Herois `json:"heroi"`
+		IDsPoderes []int  `json:"ids_poderes"` // Agora recebemos apenas os IDs dos poderes
 	}
 
 	// Decodifica o JSON da requisição
 	err := json.NewDecoder(r.Body).Decode(&requestPayload)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		http.Error(w, "Payload da requisição inválido", http.StatusBadRequest)
 		return
 	}
 
-	// Chama a função para cadastrar o herói com seus poderes
-	err = CadastrarHeroiComPoderesNormalizados(requestPayload.Heroi, requestPayload.Poderes)
+	// Chama a função para cadastrar o herói com os IDs dos poderes
+	err = CadastrarHeroiComPoderesNormalizados(requestPayload.Heroi, requestPayload.IDsPoderes)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Erro ao cadastrar herói: %v", err), http.StatusInternalServerError)
 		return
