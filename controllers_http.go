@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	//"fmt"
 	"net/http"
 )
@@ -101,34 +102,31 @@ func MostraPorStatus(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
-// 	// Estrutura para decodificar o payload
-// 	var requestPayload struct {
-// 		Heroi   Herois `json:"heroi"`
-// 		Poderes []struct {
-// 			Poder     string `json:"poder"`
-// 			Descricao string `json:"descricao"`
-// 		} `json:"poderes"`
-// 	}
+func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
+	// Estrutura para decodificar o payload
+	var requestPayload struct {
+		Heroi   Herois  `json:"heroi"`
+		Poderes []Poder `json:"poderes"`
+	}
 
-// 	// Decodifica o JSON da requisição
-// 	err := json.NewDecoder(r.Body).Decode(&requestPayload)
-// 	if err != nil {
-// 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-// 		return
-// 	}
+	// Decodifica o JSON da requisição
+	err := json.NewDecoder(r.Body).Decode(&requestPayload)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
 
-// 	// Chama a função para cadastrar o herói com seus poderes
-// 	err = CadastrarHeroiComPoderesNormalizados(requestPayload.Heroi, requestPayload.Poderes)
-// 	if err != nil {
-// 		http.Error(w, fmt.Sprintf("Erro ao cadastrar herói: %v", err), http.StatusInternalServerError)
-// 		return
-// 	}
+	// Chama a função para cadastrar o herói com seus poderes
+	err = CadastrarHeroiComPoderesNormalizados(requestPayload.Heroi, requestPayload.Poderes)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Erro ao cadastrar herói: %v", err), http.StatusInternalServerError)
+		return
+	}
 
-// 	// Resposta de sucesso
-// 	w.WriteHeader(http.StatusCreated)
-// 	w.Write([]byte("Herói cadastrado com sucesso!"))
-// }
+	// Resposta de sucesso
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Herói cadastrado com sucesso!"))
+}
 
 func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
