@@ -8,7 +8,7 @@ import (
 )
 
 type Crimes struct {
-	Herois
+	//Herois
 	NomeCrime       string `json:"nome_crime"`
 	Severidade      string `json:"severidade"`
 	DataCrime       string `json:"data_crime"`
@@ -65,6 +65,7 @@ func ConsultaCrimesPorHeroiESeveridade(nomeHeroi string, severidadeMinima int, s
 			&crime.Severidade,
 			&crime.DataCrime,
 			&crime.DescricaoEvento,
+			new(bool),
 		)
 		if err != nil {
 			log.Fatal(err)
