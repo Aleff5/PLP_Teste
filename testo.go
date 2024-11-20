@@ -40,6 +40,11 @@ type Herois struct {
 	Forca        int      `json:"forca"`
 }
 
+type Poder struct {
+	Poder     string `json:"poder"`
+	Descricao string `json:"descricao"`
+}
+
 // Método para exibir as informações dos heróis
 func (h Herois) ExibeInfosGerais() []Herois {
 	db := ConectaDB()
@@ -307,10 +312,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	return herois, nil
 }
 
-func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []struct {
-	Poder     string
-	Descricao string
-}) error {
+func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []Poder) error {
 	db := ConectaDB()
 	defer db.Close()
 
@@ -376,14 +378,37 @@ func CadastrarHeroiComPoderesNormalizados(heroi Herois, poderes []struct {
 }
 
 func Remove(id int) error {
+	log.Printf("Iniciando a remoção do herói com ID: %d", id)
+
+	// Conexão com o banco de dados
 	db := ConectaDB()
-	defer db.Close()
+	defer func() {
+		log.Println("Fechando a conexão com o banco de dados.")
+		db.Close()
+	}()
 
+	// Query para deletar o herói
 	query := `DELETE FROM Herois WHERE id_heroi = $1`
+	log.Printf("Executando a query: %s", query)
 
-	_, err := db.Exec(query, id)
+	// Executa a query
+	result, err := db.Exec(query, id)
 	if err != nil {
+		log.Printf("Erro ao executar a query: %v", err)
 		return fmt.Errorf("erro ao remover herói com id %d: %w", id, err)
 	}
+
+	// Verifica se alguma linha foi afetada
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("Erro ao verificar linhas afetadas: %v", err)
+		return fmt.Errorf("erro ao verificar linhas afetadas ao remover herói com id %d: %w", id, err)
+	}
+	if rowsAffected == 0 {
+		log.Printf("Nenhum herói encontrado com ID: %d", id)
+		return fmt.Errorf("nenhum herói encontrado com id %d", id)
+	}
+
+	log.Printf("Herói com ID: %d removido com sucesso. Linhas afetadas: %d", id, rowsAffected)
 	return nil
 }

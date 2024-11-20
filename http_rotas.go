@@ -13,6 +13,8 @@ func Loading() {
 	r.HandleFunc("/", MostraTudo)
 	r.HandleFunc("/heroi", MostraPorNome)
 	r.HandleFunc("/heroipop", MostraPopularidade)
+	r.HandleFunc("/heroicadastra", CadastraHeroi)
+	r.HandleFunc("/delete", DeletaAKAralha)
 	r.HandleFunc("/heroistatus", MostraPorStatus)
 	r.HandleFunc("/heroieseveridadecrime", ConsultaCrimesHS)
 	r.HandleFunc("/heroicrime", ConsultaCrimesHeroi)
