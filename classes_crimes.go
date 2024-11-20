@@ -33,11 +33,11 @@ func ConsultaCrimesPorHeroiESeveridade(nomeHeroi string, severidadeMinima int, s
 		SELECT 
 			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, hc.esconder
 		FROM 
-			Crimes c
+			crimes c
 		JOIN 
-			Herois_Crimes hc ON c.id_crime = hc.id_crime
+			herois_crimes hc ON c.id_crime = hc.id_crime
 		JOIN 
-			Herois h ON hc.id_heroi = h.id_heroi
+			herois h ON hc.id_heroi = h.id_heroi
 		WHERE 
 			h.nome_heroi = $1 
 		AND 
@@ -90,13 +90,13 @@ func ConsultaCrimesPorHeroi(nomeHeroi string) ([]Crimes, error) {
 		SELECT 
 			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento
 		FROM 
-			Crimes c
+			crimes c
 		JOIN 
-			Herois_Crimes hc ON c.id_crime = hc.id_crime
+			herois_crimes hc ON c.id_crime = hc.id_crime
 		JOIN 
-			Herois h ON hc.id_heroi = h.id_heroi
+			herois h ON hc.id_heroi = h.id_heroi
 		WHERE 
-			h.nome_heroi ILIKE $1
+			h.nome_heroi = $1
 		AND 
 			hc.esconder = false;
 	`
@@ -145,9 +145,9 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 		SELECT 
 			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento
 		FROM 
-			Crimes c
+			crimes c
 		JOIN 
-			Herois_Crimes hc ON c.id_crime = hc.id_crime
+			herois_crimes hc ON c.id_crime = hc.id_crime
 		WHERE 
 			c.severidade BETWEEN $1 AND $2
 		AND 
@@ -195,7 +195,7 @@ func ModificacaoHeroi(NomeHeroi string, NovoNomeHeroi string, NomeReal string, S
 	// Query que atualiza o herói com "NomeHeroi"
 	query := `
 		UPDATE
-			Herois
+			herois
 		SET
 			nome_heroi = $2,
 			nome = $3,
@@ -228,11 +228,11 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 		SELECT
 			m.nome_missao, m.descricao, m.nivel_dificuldade, m.resultado, m.recompensa
 		FROM
-			Missoes m
+			missoes m
 		JOIN
-			Herois_Missoes hm ON m.id_missao = hm.id_missao
+			herois_missoes hm ON m.id_missao = hm.id_missao
 		JOIN
-			Herois h ON hm.id_heroi = h.id_heroi
+			herois h ON hm.id_heroi = h.id_heroi
 		WHERE
 			h.nome_heroi = $1;
 		ORDER BY m.nivel_dificuldade ASC;

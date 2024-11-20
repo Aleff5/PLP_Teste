@@ -12,7 +12,7 @@ import (
 
 // Função para conectar ao banco de dados
 func ConectaDB() *sql.DB {
-	conexao := "user=postgres dbname=TheBoyzz password=admin host=localhost sslmode=disable"
+	conexao := "user=postgres dbname=TheBoys password=davi252310 host=localhost sslmode=disable"
 	db, err := sql.Open("postgres", conexao)
 	if err != nil {
 		log.Fatal(err)
