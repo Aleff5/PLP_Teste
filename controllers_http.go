@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// Controller para exibir todas as informações de todos os herois
 func MostraTudo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var herois Herois
@@ -16,6 +17,7 @@ func MostraTudo(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Controller para exibir todas as informações de um heroi por nome
 func MostraPorNome(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		NomeHeroi string `json:"nome_heroi"`
@@ -47,6 +49,7 @@ func MostraPorNome(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Controller para exibir todas as informações de um heroi por Popularidade
 func MostraPopularidade(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		Popularidade int `json:"popularidade"`
@@ -75,6 +78,7 @@ func MostraPopularidade(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Controller para exibir todas as informações de um heroi por Status de atividade
 func MostraPorStatus(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		Status string `json:"status_atividade"`
@@ -103,6 +107,7 @@ func MostraPorStatus(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Controller para cadastrar um heroi
 func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
 	// Estrutura para decodificar o payload
 	var requestPayload struct {
@@ -129,6 +134,7 @@ func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Herói cadastrado com sucesso!"))
 }
 
+// Controller para deletar um heroi
 func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		Id int `json:"id_heroi"`
@@ -154,6 +160,7 @@ func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Controller para consultar crimes por heroi e severidade
 func ConsultaCrimesHS(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		NomeHeroi        string `json:"nome_heroi"`
@@ -186,6 +193,7 @@ func ConsultaCrimesHS(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Controller para consultar crimes por heroi
 func ConsultaCrimesHeroi(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		NomeHeroi string `json:"nome_heroi"`
@@ -214,6 +222,7 @@ func ConsultaCrimesHeroi(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Controller para consultar todos os poderes e seus IDs
 func MostraTodosPoderes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -221,6 +230,7 @@ func MostraTodosPoderes(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(allPoderes)
 }
 
+// Controller para consultar crimes de acordo com a severidade
 func ConsultaCrimesSeveridade(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		SeveridadeMinima int `json:"severidade_minima"`
@@ -251,6 +261,7 @@ func ConsultaCrimesSeveridade(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Handler para editar um heroi
 func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 	// Verifica se o método da requisição é PUT
 	if r.Method != http.MethodPut {
@@ -289,6 +300,7 @@ func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Herói atualizado com sucesso!"))
 }
 
+// Controller para consultar missões por heroi
 func ConsultaMissaoHeroi(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		NomeHeroi string `json:"nome_heroi"`

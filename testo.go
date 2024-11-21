@@ -40,6 +40,7 @@ type Herois struct {
 	Forca        int      `json:"forca"`
 }
 
+// Estrutura dos Poderes
 type Poder struct {
 	Id_poder  int    `json:"id_poder"`
 	Poder     string `json:"poder"`
@@ -136,6 +137,7 @@ func splitPoderes(poderes string) []string {
 	return strings.Split(poderes, ", ")
 }
 
+// Método para exibir as informações dos heróis por nome
 func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 	db := ConectaDB()
 	defer db.Close() // Garantir que o banco de dados seja fechado após o uso
@@ -204,6 +206,7 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 	return &heroi, nil
 }
 
+// Método para exibir as informações dos heróis por popularidade
 func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	db := ConectaDB()
 	defer db.Close()
@@ -275,6 +278,7 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	return herois, nil
 }
 
+// Método para exibir as informações dos heróis por status
 func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	db := ConectaDB()
 	defer db.Close()
@@ -346,6 +350,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	return herois, nil
 }
 
+// Função que cadastra os herois com a devida normalização
 func CadastrarHeroiComPoderesNormalizados(heroi Herois, idsPoderes []int) error {
 	db := ConectaDB()
 	defer db.Close()
@@ -411,6 +416,7 @@ func CadastrarHeroiComPoderesNormalizados(heroi Herois, idsPoderes []int) error 
 	return nil
 }
 
+// Função para remover um heroi(Oculta a exibição do heroi, porem mantem no BD)
 func Remove(id int) error {
 	log.Printf("Iniciando a remoção do herói com ID: %d", id)
 
@@ -447,6 +453,7 @@ func Remove(id int) error {
 	return nil
 }
 
+// Função para exibir todos os poderes
 func ExibeTodosOsPoderes() []Poder {
 	db := ConectaDB()
 	defer db.Close()

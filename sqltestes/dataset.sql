@@ -47,6 +47,7 @@ INSERT INTO Poderes (poder, descricao) VALUES
     ('Habilidade de cura', 'Capacidade de curar outras pessoas ao tocá-las.'),
     ('Absorção de energia', 'Habilidade de absorver energia de ataques ou fontes externas para ficar mais forte.');
 
+-- Inserir a tabela Herois_Poderes no banco de dados
 
 INSERT INTO herois_poderes (id_heroi, id_poder) VALUES
 (1, 13), -- Homelander - Super força
@@ -109,6 +110,8 @@ VALUES
 ('Racismo', 7),
 ('Trafico de animais', 5);
 
+--Inserir as missoes
+
 INSERT INTO Missoes (nome_missao, descricao, nivel_dificuldade)
 VALUES
 ('Caçada ao Supers', 'Investigar e capturar um super que age fora da lei', 7),
@@ -132,6 +135,7 @@ VALUES
 ('Alerta Comunitário', 'Informar moradores sobre a presença de um super perigoso', 1),
 ('Teste de Equipamento', 'Avaliar novos dispositivos contra supers', 3);
 
+--inserir na tabela Heroi_Crime
 
 INSERT INTO Heroi_Crime (id_heroi, id_crime, data_crime, descricao_evento, esconder)
 VALUES

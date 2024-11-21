@@ -7,6 +7,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// Struct de Crimes para o rows
 type Crimes struct {
 	//Herois
 	NomeHeroi       string `json:"nome_heroi"`
@@ -16,6 +17,7 @@ type Crimes struct {
 	DescricaoEvento string `json:"descricao_evento"`
 }
 
+// Struct de Missoes para o rows
 type Missoes struct {
 	NomeHeroi       string `json:"nome_heroi"`
 	NomeMissao      string `json:"nome_missao"`
@@ -279,7 +281,7 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 		return nil, err
 	}
 	defer rows.Close()
-
+	//Itera sobre o resultado das consultas
 	var missoes []Missoes
 	for rows.Next() {
 		var missao Missoes

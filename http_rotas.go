@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Define as rotas da aplicação
 func Loading() {
 	r := mux.NewRouter()
 

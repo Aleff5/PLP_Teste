@@ -1,3 +1,4 @@
+--Cria a tabela de herois
 CREATE TABLE Herois (
     id_heroi SERIAL PRIMARY KEY,
     nome_heroi VARCHAR(50) NOT NULL,
@@ -13,15 +14,22 @@ CREATE TABLE Herois (
     esconder BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-
+--Cria a a tabela poderes
 CREATE TABLE Poderes (
     id_poder SERIAL NOT NULL PRIMARY KEY,
     poder VARCHAR(50),
     descricao VARCHAR(255)
 );
+-- Cria a tabela herois_poderes
+CREATE TABLE Herois_Poderes(
+    id_heroi INT NOT NULL,
+    id_poder INT NOT NULL,
+    CONSTRAINT pk_heroi_poder PRIMARY KEY (id_heroi, id_poder),
+    CONSTRAINT fk_heroi_poder FOREIGN KEY (id_heroi) REFERENCES Herois(id_heroi),
+    CONSTRAINT fk_poder_heroi FOREIGN KEY (id_poder) REFERENCES Poder(id_poder)
+)
 
-
-
+-- Cria a tabela de batalhas
 CREATE TABLE Batalhas (
     id_batalha SERIAL PRIMARY KEY,
     local VARCHAR(100) NOT NULL,
@@ -29,7 +37,7 @@ CREATE TABLE Batalhas (
     descricao VARCHAR(255),
     resultado VARCHAR(20) CHECK (resultado IN ('Sucesso', 'Fracasso'))
 );
-
+-- Cria a tabela de herois_batalhas
 CREATE TABLE Herois_Batalhas (
     id_heroi INT NOT NULL,
     id_batalha INT NOT NULL,
@@ -37,7 +45,7 @@ CREATE TABLE Herois_Batalhas (
     CONSTRAINT fk_heroi_batalha_heroi FOREIGN KEY (id_heroi) REFERENCES Herois(id_heroi),
     CONSTRAINT fk_heroi_batalha_batalha FOREIGN KEY (id_batalha) REFERENCES Batalhas(id_batalha)
 );
-
+-- Cria a tabela de missoes
 CREATE TABLE Missoes (
     id_missao SERIAL PRIMARY KEY,
     nome_missao VARCHAR(100) NOT NULL,
@@ -46,7 +54,7 @@ CREATE TABLE Missoes (
     resultado VARCHAR(20) CHECK (resultado IN ('Sucesso', 'Fracasso')),
     recompensa VARCHAR(50) -- ex: "+10 popularidade", "+5 força"   
 );
-
+-- Cria a tabela de herois_missoes
 CREATE TABLE Herois_Missoes (
     id_heroi INT NOT NULL,
     id_missao INT NOT NULL,
@@ -55,7 +63,7 @@ CREATE TABLE Herois_Missoes (
     CONSTRAINT fk_heroi_missao_missao FOREIGN KEY (id_missao) REFERENCES Missoes(id_missao)
 );
 
-
+-- Cria a tabela de crimes
 CREATE TABLE Crimes (
     id_crime SERIAL PRIMARY KEY,
     nome_crime VARCHAR(100) NOT NULL,
@@ -177,10 +185,3 @@ FOR EACH ROW
 EXECUTE FUNCTION ajustar_atributos_missao_func();
 
 
-CREATE TABLE Herois_Poderes(
-    id_heroi INT NOT NULL,
-    id_poder INT NOT NULL,
-    CONSTRAINT pk_heroi_poder PRIMARY KEY (id_heroi, id_poder),
-    CONSTRAINT fk_heroi_poder FOREIGN KEY (id_heroi) REFERENCES Herois(id_heroi),
-    CONSTRAINT fk_poder_heroi FOREIGN KEY (id_poder) REFERENCES Poder(id_poder)
-)
