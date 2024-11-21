@@ -9,6 +9,7 @@ import (
 
 type Crimes struct {
 	//Herois
+	NomeHeroi       string `json:"nome_heroi"`
 	NomeCrime       string `json:"nome_crime"`
 	Severidade      string `json:"severidade"`
 	DataCrime       string `json:"data_crime"`
@@ -16,6 +17,7 @@ type Crimes struct {
 }
 
 type Missoes struct {
+	NomeHeroi       string `json:"nome_heroi"`
 	NomeMissao      string `json:"nome_missao"`
 	DescricaoMissao string `json:"descricao"`
 	NivelMissao     string `json:"nivel_dificuldade"`
@@ -31,7 +33,7 @@ func ConsultaCrimesPorHeroiESeveridade(nomeHeroi string, severidadeMinima int, s
 	// Consulta para buscar crimes com base no nome do herói e na severidade
 	query := `
 		SELECT 
-			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, hc.esconder
+			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, h.nome_heroi
 		FROM 
 			crimes c
 		JOIN 
@@ -40,10 +42,11 @@ func ConsultaCrimesPorHeroiESeveridade(nomeHeroi string, severidadeMinima int, s
 			herois h ON hc.id_heroi = h.id_heroi
 		WHERE 
 			h.nome_heroi = $1 
+		
 		AND 
-			hc.esconder = false
+			c.severidade BETWEEN $2 AND $3
 		AND 
-			c.severidade BETWEEN $2 AND $3;
+			hc.esconder = false;
 	`
 
 	// Executa a consulta
@@ -65,12 +68,14 @@ func ConsultaCrimesPorHeroiESeveridade(nomeHeroi string, severidadeMinima int, s
 			&crime.Severidade,
 			&crime.DataCrime,
 			&crime.DescricaoEvento,
-			new(bool),
+			//&esconder,        // Agora você armazena o valor de "esconder" em uma variável bool
+			&crime.NomeHeroi, // Nome do herói
 		)
 		if err != nil {
 			log.Fatal(err)
 		}
 		crimes = append(crimes, crime)
+
 	}
 
 	// Verifica se não encontrou nenhum crime
@@ -89,7 +94,7 @@ func ConsultaCrimesPorHeroi(nomeHeroi string) ([]Crimes, error) {
 	// Consulta para buscar crimes com base no nome do herói
 	query := `
 		SELECT 
-			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento
+			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, h.nome_heroi
 		FROM 
 			crimes c
 		JOIN 
@@ -121,6 +126,7 @@ func ConsultaCrimesPorHeroi(nomeHeroi string) ([]Crimes, error) {
 			&crime.Severidade,
 			&crime.DataCrime,
 			&crime.DescricaoEvento,
+			&crime.NomeHeroi,
 		)
 		if err != nil {
 			log.Fatal(err)
@@ -144,11 +150,13 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 	// Consulta para buscar crimes com base na severidade
 	query := `
 		SELECT 
-			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento
+			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, h.nome_heroi
 		FROM 
 			crimes c
 		JOIN 
 			herois_crimes hc ON c.id_crime = hc.id_crime
+		JOIN 
+			herois h ON hc.id_heroi = h.id_heroi
 		WHERE 
 			c.severidade BETWEEN $1 AND $2
 		AND 
@@ -174,6 +182,7 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 			&crime.Severidade,
 			&crime.DataCrime,
 			&crime.DescricaoEvento,
+			&crime.NomeHeroi,
 		)
 		if err != nil {
 			log.Fatal(err)
@@ -241,7 +250,7 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 	//Query para buscar missões com base no nome do herói
 	query := `
 		SELECT
-			m.nome_missao, m.descricao, m.nivel_dificuldade, m.resultado, m.recompensa
+			m.nome_missao, m.descricao, m.nivel_dificuldade, m.resultado, m.recompensa, h.nome_heroi
 		FROM
 			missoes m
 		JOIN
@@ -249,7 +258,7 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 		JOIN
 			herois h ON hm.id_heroi = h.id_heroi
 		WHERE
-			h.nome_heroi = $1;
+			h.nome_heroi = $1
 		ORDER BY m.nivel_dificuldade ASC;
 	`
 	//Executa a consulta
@@ -269,6 +278,7 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 			&missao.NivelMissao,
 			&missao.Resultado,
 			&missao.Recompensa,
+			&missao.NomeHeroi,
 		)
 		if err != nil {
 			log.Fatal(err)

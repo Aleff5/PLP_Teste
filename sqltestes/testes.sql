@@ -141,7 +141,7 @@ DECLARE
     aumento_popularidade FLOAT;
 BEGIN
     -- Obter o resultado da missão
-    SELECT resultado INTO resultado FROM Missoes WHERE id_missao = NEW.id_missao;
+    SELECT m.resultado INTO resultado FROM Missoes m WHERE m.id_missao = NEW.id_missao;
 
     -- Se a missão for um sucesso
     IF resultado = 'Sucesso' THEN
@@ -174,7 +174,6 @@ CREATE TRIGGER ajustar_atributos_missao
 AFTER INSERT ON Herois_Missoes
 FOR EACH ROW
 EXECUTE FUNCTION ajustar_atributos_missao_func();
-
 
 
 CREATE TABLE Herois_Poderes(
