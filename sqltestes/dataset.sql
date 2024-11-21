@@ -180,3 +180,28 @@ VALUES
 (10, 9, '2022-12-12', 'Produção e uso de drogas ilegais', TRUE),
 (10, 6, '2021-05-05', 'Sequestro de criminoso para obter informações', FALSE);
 
+-- Recupera heróis ordenados pela força (descendente) e missões pela dificuldade (descendente)
+DO $$
+DECLARE
+    heroi RECORD;
+    missao RECORD;
+BEGIN
+    -- Itera sobre todas as missões
+    FOR missao IN 
+        SELECT id_missao, nivel_dificuldade 
+        FROM missoes 
+        ORDER BY nivel_dificuldade DESC 
+    LOOP
+        -- Associa os heróis mais fortes para a missão atual
+        FOR heroi IN 
+            SELECT id_heroi, forca 
+            FROM herois 
+            WHERE forca >= missao.nivel_dificuldade
+            ORDER BY forca DESC 
+            LIMIT 3 -- Limita a 3 heróis por missão (ajuste conforme necessário)
+        LOOP
+            INSERT INTO herois_missoes (id_heroi, id_missao)
+            VALUES (heroi.id_heroi, missao.id_missao);
+        END LOOP;
+    END LOOP;
+END $$;

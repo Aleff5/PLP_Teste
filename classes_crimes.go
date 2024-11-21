@@ -246,11 +246,17 @@ func EditarHeroiPorNome(nomeHeroi string, heroiAtualizado Herois) error {
 // Função para Consultar Missões por Herói
 func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 	db := ConectaDB()
-	defer db.Close() //Grarantir que o banco de dados seja fechado após o uso
-	//Query para buscar missões com base no nome do herói
+	defer db.Close()
+
+	// Query atualizada para incluir todos os heróis da missão
 	query := `
 		SELECT
-			m.nome_missao, m.descricao, m.nivel_dificuldade, m.resultado, m.recompensa, h.nome_heroi
+			m.nome_missao, 
+			m.descricao, 
+			m.nivel_dificuldade, 
+			m.resultado, 
+			m.recompensa, 
+			h.nome_heroi
 		FROM
 			missoes m
 		JOIN
@@ -258,18 +264,23 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 		JOIN
 			herois h ON hm.id_heroi = h.id_heroi
 		WHERE
-			h.nome_heroi = $1
+			m.id_missao IN (
+				SELECT DISTINCT hm.id_missao 
+				FROM herois_missoes hm
+				JOIN herois h ON hm.id_heroi = h.id_heroi
+				WHERE h.nome_heroi = $1
+			)
 		ORDER BY m.nivel_dificuldade ASC;
 	`
-	//Executa a consulta
+
 	rows, err := db.Query(query, nomeHeroi)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
-	defer rows.Close()    //Garantir que o resultado seja fechado após o uso
-	var missoes []Missoes //Cria uma slice para armazenar as missões
-	//Itera sobre os resultados da consulta
+	defer rows.Close()
+
+	var missoes []Missoes
 	for rows.Next() {
 		var missao Missoes
 		err := rows.Scan(
@@ -285,7 +296,7 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 		}
 		missoes = append(missoes, missao)
 	}
-	//Verifica se não encontrou nenhuma missão
+
 	if len(missoes) == 0 {
 		return nil, fmt.Errorf("nenhuma missão encontrada para o herói %s", nomeHeroi)
 	}
