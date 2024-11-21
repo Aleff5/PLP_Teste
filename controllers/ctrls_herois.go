@@ -1,17 +1,16 @@
-package main
+package controllers
 
 import (
 	"encoding/json"
 	"fmt"
-
-	//"fmt"
 	"net/http"
+	"teste/classes"
 )
 
 // Controller para exibir todas as informações de todos os herois
 func MostraTudo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var herois Herois
+	var herois classes.Herois
 	allHeroes := herois.ExibeInfosGerais()
 	json.NewEncoder(w).Encode(allHeroes)
 
@@ -35,7 +34,7 @@ func MostraPorNome(w http.ResponseWriter, r *http.Request) {
 	// Configura o cabeçalho de resposta
 	w.Header().Set("Content-Type", "application/json")
 
-	heroi, err := BuscaHeroiPorNome(nomeHeroi)
+	heroi, err := classes.BuscaHeroiPorNome(nomeHeroi)
 	if err != nil {
 		http.Error(w, "Herói não encontrado ou erro no servidor", http.StatusNotFound)
 		return
@@ -66,7 +65,7 @@ func MostraPopularidade(w http.ResponseWriter, r *http.Request) {
 	// Configura o cabeçalho de resposta
 	w.Header().Set("Content-Type", "application/json")
 
-	herois, err := BuscaHeroisPorPopularidade(popularidade)
+	herois, err := classes.BuscaHeroisPorPopularidade(popularidade)
 	if err != nil {
 		http.Error(w, "Herois não encontrado ou erro no servidor", http.StatusNotFound)
 		return
@@ -95,7 +94,7 @@ func MostraPorStatus(w http.ResponseWriter, r *http.Request) {
 	// Configura o cabeçalho de resposta
 	w.Header().Set("Content-Type", "application/json")
 
-	herois, err := BuscaHeroisPorStatus(status)
+	herois, err := classes.BuscaHeroisPorStatus(status)
 	if err != nil {
 		http.Error(w, "Herois não encontrado ou erro no servidor", http.StatusNotFound)
 		return
@@ -111,8 +110,8 @@ func MostraPorStatus(w http.ResponseWriter, r *http.Request) {
 func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
 	// Estrutura para decodificar o payload
 	var requestPayload struct {
-		Heroi      Herois `json:"heroi"`
-		IDsPoderes []int  `json:"ids_poderes"` // Agora recebemos apenas os IDs dos poderes
+		Heroi      classes.Herois `json:"heroi"`
+		IDsPoderes []int          `json:"ids_poderes"` // Agora recebemos apenas os IDs dos poderes
 	}
 
 	// Decodifica o JSON da requisição
@@ -123,7 +122,7 @@ func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Chama a função para cadastrar o herói com os IDs dos poderes
-	err = CadastrarHeroiComPoderesNormalizados(requestPayload.Heroi, requestPayload.IDsPoderes)
+	err = classes.CadastrarHeroiComPoderesNormalizados(requestPayload.Heroi, requestPayload.IDsPoderes)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Erro ao cadastrar herói: %v", err), http.StatusInternalServerError)
 		return
@@ -147,7 +146,7 @@ func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := requestData.Id
-	possivelerro := Remove(id)
+	possivelerro := classes.Remove(id)
 	if possivelerro != nil {
 		http.Error(w, "Herois não encontrado ou erro no servidor", http.StatusNotFound)
 		return
@@ -160,107 +159,6 @@ func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// Controller para consultar crimes por heroi e severidade
-func ConsultaCrimesHS(w http.ResponseWriter, r *http.Request) {
-	var requestData struct {
-		NomeHeroi        string `json:"nome_heroi"`
-		SeveridadeMinima int    `json:"severidade_minima"`
-		SeveridadeMaxima int    `json:"severidade_maxima"`
-	}
-
-	err := json.NewDecoder(r.Body).Decode(&requestData)
-	if err != nil {
-		http.Error(w, "Invalid Request Payload", http.StatusBadRequest)
-		return
-	}
-
-	nomeHeroi := requestData.NomeHeroi
-	severidadeMinima := requestData.SeveridadeMinima
-	severidadeMaxima := requestData.SeveridadeMaxima
-
-	// Configura o cabeçalho de resposta
-	w.Header().Set("Content-Type", "application/json")
-
-	crimes, err := ConsultaCrimesPorHeroiESeveridade(nomeHeroi, severidadeMinima, severidadeMaxima)
-	if err != nil {
-		http.Error(w, "Crimes não encontrado ou erro no servidor", http.StatusNotFound)
-		return
-	}
-	err = json.NewEncoder(w).Encode(crimes)
-	if err != nil {
-		http.Error(w, "Erro ao codificar resposta JSON", http.StatusInternalServerError)
-		return
-	}
-}
-
-// Controller para consultar crimes por heroi
-func ConsultaCrimesHeroi(w http.ResponseWriter, r *http.Request) {
-	var requestData struct {
-		NomeHeroi string `json:"nome_heroi"`
-	}
-
-	err := json.NewDecoder(r.Body).Decode(&requestData)
-	if err != nil {
-		http.Error(w, "Invalid Request Payload", http.StatusBadRequest)
-		return
-	}
-
-	nomeHeroi := requestData.NomeHeroi
-
-	// Configura o cabeçalho de resposta
-	w.Header().Set("Content-Type", "application/json")
-
-	crimes, err := ConsultaCrimesPorHeroi(nomeHeroi)
-	if err != nil {
-		http.Error(w, "Crimes não encontrado ou erro no servidor", http.StatusNotFound)
-		return
-	}
-	err = json.NewEncoder(w).Encode(crimes)
-	if err != nil {
-		http.Error(w, "Erro ao codificar resposta JSON", http.StatusInternalServerError)
-		return
-	}
-}
-
-// Controller para consultar todos os poderes e seus IDs
-func MostraTodosPoderes(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	allPoderes := ExibeTodosOsPoderes()
-	json.NewEncoder(w).Encode(allPoderes)
-}
-
-// Controller para consultar crimes de acordo com a severidade
-func ConsultaCrimesSeveridade(w http.ResponseWriter, r *http.Request) {
-	var requestData struct {
-		SeveridadeMinima int `json:"severidade_minima"`
-		SeveridadeMaxima int `json:"severidade_maxima"`
-	}
-
-	err := json.NewDecoder(r.Body).Decode(&requestData)
-	if err != nil {
-		http.Error(w, "Invalid Request Payload", http.StatusBadRequest)
-		return
-	}
-
-	severidadeMinima := requestData.SeveridadeMinima
-	severidadeMaxima := requestData.SeveridadeMaxima
-
-	// Configura o cabeçalho de resposta
-	w.Header().Set("Content-Type", "application/json")
-
-	crimes, err := ConsultaCrimesPorSeveridade(severidadeMinima, severidadeMaxima)
-	if err != nil {
-		http.Error(w, "Crimes não encontrado ou erro no servidor", http.StatusNotFound)
-		return
-	}
-	err = json.NewEncoder(w).Encode(crimes)
-	if err != nil {
-		http.Error(w, "Erro ao codificar resposta JSON", http.StatusInternalServerError)
-		return
-	}
-}
-
 // Handler para editar um heroi
 func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 	// Verifica se o método da requisição é PUT
@@ -271,8 +169,8 @@ func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Estrutura para decodificar o payload da requisição
 	var requestPayload struct {
-		NomeHeroi       string `json:"nome_heroi"`       // Nome do herói a ser editado
-		HeroiAtualizado Herois `json:"heroi_atualizado"` // Dados atualizados do herói
+		NomeHeroi       string         `json:"nome_heroi"`       // Nome do herói a ser editado
+		HeroiAtualizado classes.Herois `json:"heroi_atualizado"` // Dados atualizados do herói
 	}
 
 	// Decodifica o JSON do corpo da requisição
@@ -289,7 +187,7 @@ func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Chama a função para editar os dados do herói
-	err = EditarHeroiPorNome(requestPayload.NomeHeroi, requestPayload.HeroiAtualizado)
+	err = classes.EditarHeroiPorNome(requestPayload.NomeHeroi, requestPayload.HeroiAtualizado)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Erro ao editar herói: %v", err), http.StatusInternalServerError)
 		return
@@ -300,31 +198,10 @@ func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Herói atualizado com sucesso!"))
 }
 
-// Controller para consultar missões por heroi
-func ConsultaMissaoHeroi(w http.ResponseWriter, r *http.Request) {
-	var requestData struct {
-		NomeHeroi string `json:"nome_heroi"`
-	}
-
-	err := json.NewDecoder(r.Body).Decode(&requestData)
-	if err != nil {
-		http.Error(w, "Invalid Request Payload", http.StatusBadRequest)
-		return
-	}
-
-	nomeHeroi := requestData.NomeHeroi
-
-	// Configura o cabeçalho de resposta
+// Controller para consultar todos os poderes e seus IDs
+func MostraTodosPoderes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	missao, err := ConsultaMissoesPorHeroi(nomeHeroi)
-	if err != nil {
-		http.Error(w, "Missão não encontrada ou erro no servidor", http.StatusNotFound)
-		return
-	}
-	err = json.NewEncoder(w).Encode(missao)
-	if err != nil {
-		http.Error(w, "Erro ao codificar resposta JSON", http.StatusInternalServerError)
-		return
-	}
+	allPoderes := classes.ExibeTodosOsPoderes()
+	json.NewEncoder(w).Encode(allPoderes)
 }
