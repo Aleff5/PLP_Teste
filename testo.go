@@ -36,7 +36,7 @@ type Herois struct {
 	NomeHeroi    string   `json:"nome_heroi"`
 	Poderes      []string `json:"poder"`
 	Popularidade int      `json:"popularidade"`
-	Status       string   `json:"status"`
+	Status       string   `json:"status_atividade"`
 	Forca        int      `json:"forca"`
 }
 

@@ -209,12 +209,12 @@ func EditarHeroiPorNome(nomeHeroi string, heroiAtualizado Herois) error {
             forca = $9,
             status_atividade = $10
         WHERE nome_heroi = $11;
-			`
+	`
 
 	// Executa a consulta com os valores atualizados
 	_, err := db.Exec(query,
-		heroiAtualizado.NomeHeroi,
-		heroiAtualizado.Nome, // Nome real
+		heroiAtualizado.NomeHeroi, // Atualiza o nome do herói
+		heroiAtualizado.Nome,      // Nome real
 		heroiAtualizado.Sexo,
 		heroiAtualizado.Altura,
 		heroiAtualizado.Peso,
@@ -222,8 +222,8 @@ func EditarHeroiPorNome(nomeHeroi string, heroiAtualizado Herois) error {
 		heroiAtualizado.LocalNasc,
 		heroiAtualizado.Popularidade,
 		heroiAtualizado.Forca,
-		heroiAtualizado.Status,
-		nomeHeroi, // Condição para identificar o herói correto
+		heroiAtualizado.Status, // Status da atividade
+		nomeHeroi,              // Nome atual do herói para identificar o registro
 	)
 
 	if err != nil {
