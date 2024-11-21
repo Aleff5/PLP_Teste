@@ -23,5 +23,6 @@ func Loading() {
 	r.HandleFunc("/severidadecrime", ConsultaCrimesSeveridade)
 	r.HandleFunc("/editar", EditarHeroiHandler)
 	r.HandleFunc("/missao", ConsultaMissaoHeroi)
+	r.HandleFunc("/simularbatalha", SimularBatalhaController)
 	log.Fatal(http.ListenAndServe(":8080", (r)))
 }
