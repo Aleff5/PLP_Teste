@@ -7,6 +7,12 @@ import (
 	"teste/classes"
 )
 
+func MostraTodosOsNomesHerois(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	allHeroes := classes.ExibeTodosOsNomes()
+	json.NewEncoder(w).Encode(allHeroes)
+}
+
 // Controller para exibir todas as informações de todos os herois
 func MostraTudo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

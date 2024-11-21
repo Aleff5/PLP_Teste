@@ -36,6 +36,37 @@ type Poder struct {
 	Descricao string `json:"descricao"`
 }
 
+// Método para exibir todos os heróis
+func ExibeTodosOsNomes() []string {
+	db := database.ConectaDB()
+	defer db.Close()
+
+	query := `SELECT nome_heroi FROM Herois WHERE esconder = false`
+	TodosHerois, err := db.Query(query)
+	if err != nil {
+		log.Fatalf("Erro ao executar a consulta: %v", err)
+	}
+	defer TodosHerois.Close()
+
+	var informacoes []string
+
+	for TodosHerois.Next() {
+		var heroi string
+		err := TodosHerois.Scan(
+			&heroi,
+		)
+		if err != nil {
+			log.Fatalf("Erro ao fazer o scan dos resultados: %v", err)
+		}
+		informacoes = append(informacoes, heroi)
+	}
+	// Verifica se ocorreu algum erro durante a iteração
+	if err = TodosHerois.Err(); err != nil {
+		log.Fatalf("Erro durante a iteração dos resultados: %v", err)
+	}
+	return informacoes
+}
+
 // Método para exibir as informações gerais dos heróis
 func (h Herois) ExibeInfosGerais() []Herois {
 
@@ -54,7 +85,7 @@ func (h Herois) ExibeInfosGerais() []Herois {
 		LEFT JOIN
 			Poderes p ON p.id_poder = hp.id_poder
 		WHERE 
-			h.hide = false
+			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -147,7 +178,7 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 		WHERE 
 			h.nome_heroi = $1
 		AND
-			h.hide = false
+			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -215,7 +246,7 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 		WHERE 
 			h.popularidade <= $1
 		AND
-			h.hide = false
+			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -288,7 +319,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 		WHERE 
 			h.status_atividade = $1
 		AND
-			h.hide = false
+			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
