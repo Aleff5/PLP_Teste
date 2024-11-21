@@ -10,6 +10,7 @@ CREATE TABLE Herois (
     popularidade INT NOT NULL CHECK (popularidade BETWEEN 0 AND 100),
     forca INT NOT NULL CHECK (forca BETWEEN 0 AND 100),
     status_atividade VARCHAR(20) CHECK (status_atividade IN ('Ativo', 'Banido', 'Inativo'))
+    esconder BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 

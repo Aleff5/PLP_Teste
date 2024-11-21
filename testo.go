@@ -62,6 +62,8 @@ func (h Herois) ExibeInfosGerais() []Herois {
 			Herois_Poderes hp ON h.id_heroi = hp.id_heroi
 		LEFT JOIN
 			Poderes p ON p.id_poder = hp.id_poder
+		WHERE 
+			h.hide = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -152,6 +154,8 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 			Poderes p ON p.id_poder = hp.id_poder
 		WHERE 
 			h.nome_heroi = $1
+		AND
+			h.hide = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -217,6 +221,8 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 			Poderes p ON p.id_poder = hp.id_poder
 		WHERE 
 			h.popularidade <= $1
+		AND
+			h.hide = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -287,6 +293,8 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 			Poderes p ON p.id_poder = hp.id_poder
 		WHERE 
 			h.status_atividade = $1
+		AND
+			h.hide = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
 			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
@@ -414,7 +422,7 @@ func Remove(id int) error {
 	}()
 
 	// Query para deletar o herói
-	query := `DELETE FROM Herois WHERE id_heroi = $1`
+	query := `UPDATE herois SET hide = true WHERE id_heroi = $1`
 	log.Printf("Executando a query: %s", query)
 
 	// Executa a query
