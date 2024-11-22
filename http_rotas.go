@@ -19,7 +19,9 @@ func Loading() {
 	r.HandleFunc("/heroi", controllers.MostraPorNome).Methods("POST")
 	r.HandleFunc("/heroipop", controllers.MostraPopularidade).Methods("POST")
 	r.HandleFunc("/heroicadastra", controllers.CadastraHeroi).Methods("POST")
+
 	r.HandleFunc("/delete", controllers.DeletaAKAralha).Methods("DELETE")
+
 	r.HandleFunc("/heroistatus", controllers.MostraPorStatus).Methods("POST")
 	r.HandleFunc("/poderes", controllers.MostraTodosPoderes).Methods("GET")
 	r.HandleFunc("/editar", controllers.EditarHeroiHandler).Methods("POST")

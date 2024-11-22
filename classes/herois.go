@@ -228,29 +228,21 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 }
 
 // Método para exibir as informações dos heróis por popularidade
-func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
+// Método para exibir os nomes dos heróis por popularidade
+func BuscaHeroisPorPopularidade(popularidade int) ([]string, error) {
 	db := database.ConectaDB()
 	defer db.Close()
 
 	query := `
-		SELECT 
-			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
-			STRING_AGG(p.poder, ', ') AS poderes
-		FROM 
-			Herois h
-		LEFT JOIN 
-			Herois_Poderes hp ON h.id_heroi = hp.id_heroi
-		LEFT JOIN
-			Poderes p ON p.id_poder = hp.id_poder
-		WHERE 
-			h.popularidade <= $1
-		AND
-			h.esconder = false
-		GROUP BY 
-			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
-	`
+        SELECT 
+            h.nome_heroi
+        FROM 
+            Herois h
+        WHERE 
+            h.popularidade <= $1
+        AND
+            h.esconder = false
+    `
 
 	rows, err := db.Query(query, popularidade)
 	if err != nil {
@@ -258,72 +250,38 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	}
 	defer rows.Close()
 
-	var herois []Herois
+	var nomesHerois []string
 	for rows.Next() {
-		var heroi Herois
-		var poderes *string // Poderes como string, pode ser NULL
-		var dataNasc *time.Time
-		err := rows.Scan(
-			&heroi.Nome,
-			&heroi.Sexo,
-			&heroi.Peso,
-			&heroi.Altura,
-			&dataNasc,
-			&heroi.LocalNasc,
-			&heroi.NomeHeroi,
-			&heroi.Popularidade,
-			&heroi.Status,
-			&heroi.Forca,
-			&poderes,
-		)
-		if err != nil {
+		var nomeHeroi string
+		if err := rows.Scan(&nomeHeroi); err != nil {
 			return nil, err
 		}
-		// Converte a data de nascimento, se não for NULL
-		if dataNasc != nil {
-			heroi.DataNasc = *dataNasc
-		} else {
-			heroi.DataNasc = time.Time{} // Define como valor zero
-		}
-
-		// Converte os poderes em uma slice, se não for NULL
-		if poderes != nil {
-			heroi.Poderes = splitPoderes(*poderes)
-		} else {
-			heroi.Poderes = []string{} // Nenhum poder registrado
-		}
-
-		herois = append(herois, heroi)
+		nomesHerois = append(nomesHerois, nomeHeroi)
 	}
 
-	return herois, nil
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return nomesHerois, nil
 }
 
 // Método para exibir as informações dos heróis por status
-func BuscaHeroisPorStatus(status string) ([]Herois, error) {
+// Método para exibir os nomes dos heróis por status
+func BuscaHeroisPorStatus(status string) ([]string, error) {
 	db := database.ConectaDB()
 	defer db.Close()
 
-	// Consulta SQL para buscar heróis pelo status
 	query := `
-		SELECT 
-			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
-			STRING_AGG(p.poder, ', ') AS poderes
-		FROM 
-			Herois h
-		LEFT JOIN 
-			Herois_Poderes hp ON h.id_heroi = hp.id_heroi
-		LEFT JOIN
-			Poderes p ON p.id_poder = hp.id_poder
-		WHERE 
-			h.status_atividade = $1
-		AND
-			h.esconder = false
-		GROUP BY 
-			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
-	`
+        SELECT 
+            h.nome_heroi
+        FROM 
+            Herois h
+        WHERE 
+            h.status_atividade = $1
+        AND
+            h.esconder = false
+    `
 
 	rows, err := db.Query(query, status)
 	if err != nil {
@@ -331,44 +289,20 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	}
 	defer rows.Close()
 
-	var herois []Herois
+	var nomesHerois []string
 	for rows.Next() {
-		var dataNasc *time.Time
-		var poderes *string
-		var heroi Herois
-		err := rows.Scan(
-			&heroi.Nome,
-			&heroi.Sexo,
-			&heroi.Peso,
-			&heroi.Altura,
-			&dataNasc,
-			&heroi.LocalNasc,
-			&heroi.NomeHeroi,
-			&heroi.Popularidade,
-			&heroi.Status,
-			&heroi.Forca,
-			&poderes,
-		)
-		if err != nil {
+		var nomeHeroi string
+		if err := rows.Scan(&nomeHeroi); err != nil {
 			return nil, err
 		}
-		// Converte a data de nascimento, se não for NULL
-		if dataNasc != nil {
-			heroi.DataNasc = *dataNasc
-		} else {
-			heroi.DataNasc = time.Time{} // Define como valor zero
-		}
-
-		//Converte os poderes em uma slice, se não for NULL
-		if poderes != nil {
-			heroi.Poderes = splitPoderes(*poderes)
-		} else {
-			heroi.Poderes = []string{} // Nenhum poder registrado
-		}
-		herois = append(herois, heroi)
+		nomesHerois = append(nomesHerois, nomeHeroi)
 	}
 
-	return herois, nil
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return nomesHerois, nil
 }
 
 // Função que cadastra os herois com a devida normalização
