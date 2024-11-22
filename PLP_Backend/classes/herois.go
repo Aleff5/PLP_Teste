@@ -27,6 +27,8 @@ type Herois struct {
 	Popularidade int      `json:"popularidade"`
 	Status       string   `json:"status_atividade"`
 	Forca        int      `json:"forca"`
+	Vitorias     int      `json:"vitorias"`
+	Derrotas     int      `json:"derrotas"`
 }
 
 // Estrutura dos Poderes
@@ -76,7 +78,7 @@ func (h Herois) ExibeInfosGerais() []Herois {
 	query := `
 		SELECT 
 			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas,
 			COALESCE(STRING_AGG(p.poder, ', '), '') AS poderes
 		FROM 
 			Herois h
@@ -88,7 +90,7 @@ func (h Herois) ExibeInfosGerais() []Herois {
 			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas;
 	`
 
 	// Executa a consulta
@@ -119,6 +121,8 @@ func (h Herois) ExibeInfosGerais() []Herois {
 			&heroi.Status,
 			&heroi.Forca,
 			&poderes,
+			&heroi.Vitorias,
+			&heroi.Derrotas,
 		)
 		if err != nil {
 			log.Fatalf("Erro ao fazer o scan dos resultados: %v", err)

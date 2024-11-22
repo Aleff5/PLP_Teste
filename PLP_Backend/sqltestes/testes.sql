@@ -12,6 +12,8 @@ CREATE TABLE Herois (
     forca INT NOT NULL CHECK (forca BETWEEN 0 AND 100),
     status_atividade VARCHAR(20) CHECK (status_atividade IN ('Ativo', 'Banido', 'Inativo'))
     esconder BOOLEAN NOT NULL DEFAULT FALSE
+    qtd_vitorias INT NOT NULL DEFAULT 0,
+    qtd_derrotas INT NOT NULL DEFAULT 0
 );
 
 --Cria a a tabela poderes
