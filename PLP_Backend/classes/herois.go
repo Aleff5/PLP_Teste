@@ -120,9 +120,9 @@ func (h Herois) ExibeInfosGerais() []Herois {
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
-			&poderes,
 			&heroi.Vitorias,
 			&heroi.Derrotas,
+			&poderes,
 		)
 		if err != nil {
 			log.Fatalf("Erro ao fazer o scan dos resultados: %v", err)
@@ -171,7 +171,7 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 	query := `
 		SELECT 
 			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas,
 			STRING_AGG(p.poder, ', ') AS poderes
 		FROM 
 			Herois h
@@ -185,7 +185,7 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas;
 	`
 
 	// Executa a consulta
@@ -204,6 +204,8 @@ func BuscaHeroiPorNome(nomeHeroi string) (*Herois, error) {
 		&heroi.Popularidade,
 		&heroi.Status,
 		&heroi.Forca,
+		&heroi.Vitorias,
+		&heroi.Derrotas,
 		&poderes,
 	)
 
@@ -239,7 +241,7 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 	query := `
 		SELECT 
 			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas, 
 			STRING_AGG(p.poder, ', ') AS poderes
 		FROM 
 			Herois h
@@ -253,7 +255,7 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas;
 	`
 
 	rows, err := db.Query(query, popularidade)
@@ -278,6 +280,8 @@ func BuscaHeroisPorPopularidade(popularidade int) ([]Herois, error) {
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
+			&heroi.Vitorias,
+			&heroi.Derrotas,
 			&poderes,
 		)
 		if err != nil {
@@ -312,7 +316,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 	query := `
 		SELECT 
 			h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, 
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas, 
 			STRING_AGG(p.poder, ', ') AS poderes
 		FROM 
 			Herois h
@@ -326,7 +330,7 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 			h.esconder = false
 		GROUP BY 
 			h.id_heroi, h.nome_real, h.sexo, h.peso, h.altura, h.data_nascimento, h.local_nascimento, 
-			h.nome_heroi, h.popularidade, h.status_atividade, h.forca;
+			h.nome_heroi, h.popularidade, h.status_atividade, h.forca, h.vitorias, h.derrotas;
 	`
 
 	rows, err := db.Query(query, status)
@@ -351,6 +355,8 @@ func BuscaHeroisPorStatus(status string) ([]Herois, error) {
 			&heroi.Popularidade,
 			&heroi.Status,
 			&heroi.Forca,
+			&heroi.Vitorias,
+			&heroi.Derrotas,
 			&poderes,
 		)
 		if err != nil {
