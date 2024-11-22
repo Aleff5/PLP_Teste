@@ -22,7 +22,7 @@ func Loading() {
 	r.HandleFunc("/delete", controllers.DeletaAKAralha).Methods("DELETE")
 	r.HandleFunc("/heroistatus", controllers.MostraPorStatus).Methods("POST")
 	r.HandleFunc("/poderes", controllers.MostraTodosPoderes).Methods("GET")
-	r.HandleFunc("/editar", controllers.EditarHeroiHandler).Methods("PUT")
+	r.HandleFunc("/editar", controllers.EditarHeroiHandler).Methods("POST")
 	// Rotas para os crimes
 	r.HandleFunc("/heroieseveridadecrime", controllers.ConsultaCrimesHS).Methods("POST")
 	r.HandleFunc("/heroicrime", controllers.ConsultaCrimesHeroi).Methods("POST")

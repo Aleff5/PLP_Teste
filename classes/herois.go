@@ -438,8 +438,8 @@ func CadastrarHeroiComPoderesNormalizados(heroi Herois, idsPoderes []int) error 
 }
 
 // Função para remover um heroi(Oculta a exibição do heroi, porem mantem no BD)
-func Remove(id int) error {
-	log.Printf("Iniciando a remoção do herói com ID: %d", id)
+func Remove(nome string) error {
+	log.Printf("Iniciando a remoção do herói: %s", nome)
 
 	// Conexão com o banco de dados
 	db := database.ConectaDB()
@@ -449,28 +449,28 @@ func Remove(id int) error {
 	}()
 
 	// Query para deletar o herói
-	query := `UPDATE herois SET hide = true WHERE id_heroi = $1`
+	query := `UPDATE herois SET esconder = true WHERE nome_heroi = $1`
 	log.Printf("Executando a query: %s", query)
 
 	// Executa a query
-	result, err := db.Exec(query, id)
+	result, err := db.Exec(query, nome)
 	if err != nil {
 		log.Printf("Erro ao executar a query: %v", err)
-		return fmt.Errorf("erro ao remover herói com id %d: %w", id, err)
+		return fmt.Errorf("erro ao remover herói com id %s: %w", nome, err)
 	}
 
 	// Verifica se alguma linha foi afetada
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		log.Printf("Erro ao verificar linhas afetadas: %v", err)
-		return fmt.Errorf("erro ao verificar linhas afetadas ao remover herói com id %d: %w", id, err)
+		return fmt.Errorf("erro ao verificar linhas afetadas ao remover herói com id %s: %w", nome, err)
 	}
 	if rowsAffected == 0 {
-		log.Printf("Nenhum herói encontrado com ID: %d", id)
-		return fmt.Errorf("nenhum herói encontrado com id %d", id)
+		log.Printf("Nenhum herói encontrado com ID: %s", nome)
+		return fmt.Errorf("nenhum herói encontrado com id %s", nome)
 	}
 
-	log.Printf("Herói com ID: %d removido com sucesso. Linhas afetadas: %d", id, rowsAffected)
+	log.Printf("Herói: %s removido com sucesso. Linhas afetadas: %d", nome, rowsAffected)
 	return nil
 }
 

@@ -142,7 +142,7 @@ func CadastraHeroi(w http.ResponseWriter, r *http.Request) {
 // Controller para deletar um heroi
 func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
-		Id int `json:"id_heroi"`
+		Nome string `json:"nome_heroi"` // Nome do herói a ser deletado
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&requestData)
@@ -151,8 +151,8 @@ func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := requestData.Id
-	possivelerro := classes.Remove(id)
+	nome := requestData.Nome
+	possivelerro := classes.Remove(nome)
 	if possivelerro != nil {
 		http.Error(w, "Herois não encontrado ou erro no servidor", http.StatusNotFound)
 		return
@@ -168,10 +168,10 @@ func DeletaAKAralha(w http.ResponseWriter, r *http.Request) {
 // Handler para editar um heroi
 func EditarHeroiHandler(w http.ResponseWriter, r *http.Request) {
 	// Verifica se o método da requisição é PUT
-	if r.Method != http.MethodPut {
-		http.Error(w, "Método não permitido. Use PUT.", http.StatusMethodNotAllowed)
-		return
-	}
+	// if r.Method != http.MethodPut {
+	// 	http.Error(w, "Método não permitido. Use PUT.", http.StatusMethodNotAllowed)
+	// 	return
+	// }
 
 	// Estrutura para decodificar o payload da requisição
 	var requestPayload struct {
